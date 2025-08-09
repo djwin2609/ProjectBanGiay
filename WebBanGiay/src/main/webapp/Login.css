@@ -1,0 +1,117 @@
+@charset "UTF-8";
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #F5F5F5; /* sáng dịu mắt hơn */
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* HEADER */
+.header {
+    width: 100%;
+    height: 70px;
+    background-color: #B71C1C; /* đỏ rượu vang */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 100%;
+}
+
+.header-content h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #FFFFFF;
+}
+
+.header-content ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.header-content ul li {
+    margin-left: 20px;
+}
+
+.header-content ul li a {
+    text-decoration: none;
+    color: #FFFFFF;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.header-content ul li a:hover {
+    color: #FF7043; /* cam san hô */
+}
+
+/* LOGIN BOX */
+.loginbox {
+    width: 340px;
+    height: auto;
+    background: #263238; /* xanh đen hiện đại */
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 60px 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.loginbox h1 {
+    margin: 0 0 30px;
+    font-size: 36px;
+}
+
+.loginbox p {
+    margin: 0 0 10px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.loginbox input[type="text"],
+.loginbox input[type="password"] {
+    width: 100%;
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background: transparent;
+    outline: none;
+    height: 40px;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* ✨ NÚT LOGIN (submit) */
+.loginbox input[type="submit"] {
+    width: 100%;
+    background-color: #FF7043;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.loginbox input[type="submit"]:hover {
+    background-color: #F4511E;
+}
