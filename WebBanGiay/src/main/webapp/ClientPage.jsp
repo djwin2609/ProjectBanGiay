@@ -179,7 +179,7 @@ to {
 	<%
 	UserBean user = (UserBean) session.getAttribute("User");
 	if (session != null && session.getAttribute("User") != null) {
-		session.removeAttribute("user");
+		//session.removeAttribute("user");
 	}
 	%>
 	<!-- Slideshow -->

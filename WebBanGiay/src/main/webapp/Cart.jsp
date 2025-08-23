@@ -7,10 +7,7 @@
 
 <%@ page session="true"%>
 <%
-if (session.getAttribute("Login") == null) {
-	response.sendRedirect("Login.jsp");
-	return;
-}
+
 UserBean user = (UserBean) session.getAttribute("User");
 if (user == null) {
 	response.sendRedirect("Login.jsp");
@@ -126,19 +123,22 @@ List<CartBean> cart = cartDao.getCartByUserId(User);
 function formatCurrency(num) {
     return num.toLocaleString('vi-VN') + " đ";
 }
-
 function updateTotal() {
     let total = 0;
+    //lấy tất cả thẻ tr trong bảng giỏ hàng 
     const rows = document.querySelectorAll("tbody tr");
-
+	//duyệt qua các hàng
     rows.forEach(row => {
         const checkbox = row.querySelector(".product-checkbox");
         const priceCell = row.querySelector(".subtotal");
 
         if (checkbox && checkbox.checked && priceCell) {
+        	//lấy giá gốc của sản phẩm từ html
             const price = parseFloat(priceCell.dataset.price);
+        	//lấy số lượng sản phẩm từ ô input.
             const quantityInput = row.querySelector("input[type='number']");
             const quantity = parseInt(quantityInput.value);
+            //cộng dồn
             total += price * quantity;
 
             // Cập nhật lại thành tiền từng dòng

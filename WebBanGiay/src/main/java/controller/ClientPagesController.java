@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,9 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import bean.OrderDetailBean;
 import bean.ProductDetailBean;
-import bo.OrderBo;
 import bo.ProductBo;
 import bo.TypeBrandBo;
 
@@ -22,14 +19,14 @@ import bo.TypeBrandBo;
 /**
  * Servlet implementation class ProductController
  */
-@WebServlet("/ProductController")
-public class ProductController extends HttpServlet {
+@WebServlet("/ClientPagesController")
+public class ClientPagesController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ProductController() {
+	public ClientPagesController() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -41,11 +38,9 @@ public class ProductController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession(false);
-		if (session != null && session.getAttribute("User") != null) {
-			// session.invalidate();
-		}
+		boolean isLoggedIn = session != null && session.getAttribute("User") != null;
+		request.setAttribute("isLoggedIn", isLoggedIn);
 		ProductBo proBo = new ProductBo();
-		
 		try {
 			for (ProductDetailBean pd : proBo.getPro()) {
 				System.out.println("ID: " + pd.getProductID());
@@ -67,6 +62,7 @@ public class ProductController extends HttpServlet {
 			List<ProductDetailBean> ds = proBo.getPro();
 			request.setAttribute("dssanpham", ds);
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
@@ -83,7 +79,6 @@ public class ProductController extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		request.getRequestDispatcher("HomePage.jsp").forward(request, response);
 	}
 
@@ -93,20 +88,7 @@ public class ProductController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String action = request.getParameter("action");
-		if (action.equals("ViewOrderDetail")) {
-			int Order_id = Integer.parseInt(request.getParameter("Order_id"));
-			try {
-				OrderBo ordBo=new OrderBo();
-				List<OrderDetailBean> orderDetails = ordBo.getOrderĐetails(Order_id);
-				request.setAttribute("orderDetails", orderDetails);
-				request.setAttribute("orderId", Order_id);
-				RequestDispatcher rd = request.getRequestDispatcher("ClientOrderDetail.jsp");
-				rd.forward(request, response);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 }

@@ -14,5 +14,10 @@ public class LoginBo {
 		ds=logDao.getLogin();
 		return ds;
 	}
-	//public boolean Chec
+	public boolean CheckLogin(String username,String password) {
+		if(username!=null&&password!=null) {
+			return username.trim().equals(username)&&password.trim().equals(password);
+		}
+		return false;
+	}
 }

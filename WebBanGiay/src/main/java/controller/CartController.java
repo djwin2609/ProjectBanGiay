@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import bean.UserBean;
-import dao.CartDao;
+import bo.CartBo;
 
 /**
  * Servlet implementation class CartController
@@ -45,6 +45,7 @@ public class CartController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		CartBo cartBo=new CartBo();
 		String action = request.getParameter("action");
 		if (action.equals("add")) {
 			try {
@@ -63,12 +64,12 @@ public class CartController extends HttpServlet {
 				int quantity = Integer.parseInt(request.getParameter("Quantity"));
 
 				// Gọi DAO để thêm vào giỏ
-				CartDao cartDao = new CartDao();
+				
 				System.out.println("User_id: " + user_id);
 				System.out.println("Product_id: " + Product_id);
 				System.out.println("Quantity: " + quantity);
 
-				cartDao.AddtoCart(user_id, Product_id, quantity);
+				cartBo.addToCart(user_id, Product_id, quantity);
 				// Sau khi thêm xong, có thể chuyển về trang giỏ hàng
 				response.sendRedirect("Cart.jsp"); // hoặc bất kỳ trang nào bạn muốn
 
@@ -81,9 +82,9 @@ public class CartController extends HttpServlet {
 			UserBean user = (UserBean) session.getAttribute("User");
 			int User_id = user.getUser_id();
 			int Product_id = Integer.parseInt(request.getParameter("Product_id"));
-			CartDao cartDao = new CartDao();
+			
 			try {
-				cartDao.RemoveFromCart(User_id, Product_id);
+				cartBo.RemoveFromCart(User_id, Product_id);
 				response.sendRedirect("Cart.jsp");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

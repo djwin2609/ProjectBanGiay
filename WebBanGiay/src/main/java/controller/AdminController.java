@@ -6,17 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import bean.OrderBean;
+import bean.OrderDetailBean;
 import bean.ProductDetailBean;
 import bean.UserBean;
 import bo.AdminBo;
-import dao.AdminDao;
 import dao.KetNoiCSDL;
+
 
 /**
  * Servlet implementation class AdminController
@@ -58,15 +60,17 @@ public class AdminController extends HttpServlet {
 		if ("true".equals(EditProductsuccessMsg)) {
 			request.setAttribute("EditProductsuccessMsg", "Cập nhật sản phẩm thành công!");
 		}
-		String DeleteUsersuccessMsg= request.getParameter("DeleteUsersuccess");
-		if("true".equals(DeleteUsersuccessMsg)) {
-			request.setAttribute("DeleteUsersuccessMsg","Xóa người dùng thành công");
+		String DeleteUsersuccessMsg = request.getParameter("DeleteUsersuccess");
+		if ("true".equals(DeleteUsersuccessMsg)) {
+			request.setAttribute("DeleteUsersuccessMsg", "Xóa người dùng thành công");
 		}
-		String DeleteProcuctsuccessMsg= request.getParameter("DeleteProductsuccess");
-		if("true".equals(DeleteProcuctsuccessMsg)) {
-			request.setAttribute("DeleteProductsuccess","Xóa sản phẩm thành công");
+		String DeleteProcuctsuccessMsg = request.getParameter("DeleteProductsuccess");
+		if ("true".equals(DeleteProcuctsuccessMsg)) {
+			request.setAttribute("DeleteProductsuccess", "Xóa sản phẩm thành công");
 		}
 		AdminBo adbo = new AdminBo();
+		
+
 		try {
 			for (ProductDetailBean pd : adbo.getProduct1()) {
 				System.out.println("ID: " + pd.getProductID());
@@ -84,6 +88,7 @@ public class AdminController extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		try {
 			List<UserBean> dsUser = adbo.getUser1();
 			request.setAttribute("DsUser", dsUser);
@@ -96,6 +101,13 @@ public class AdminController extends HttpServlet {
 			request.setAttribute("Dsproduct", dsProduct);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			List<OrderBean> Order = adbo.getOrderAdmin();
+			request.setAttribute("dsOrder", Order);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		request.getRequestDispatcher("Admin.jsp").forward(request, response);
@@ -138,34 +150,39 @@ public class AdminController extends HttpServlet {
 		String Email = request.getParameter("Email");
 		String Role = request.getParameter("Role");
 		// Products
-		
+
 		String Product_id = request.getParameter("Product_id");
-		String ProductDetail_id=request.getParameter("ProductDetail_id");
+		String ProductDetail_id = request.getParameter("ProductDetail_id");
 		String ProductName = request.getParameter("ProductName");
 		String Price = request.getParameter("Price");
 		String Image = request.getParameter("Image");
 		String Size = request.getParameter("Size");
 		String Brand = request.getParameter("Brand");
-		String Stock_quantity = request.getParameter("Stock");
+		String Stock_quantity = request.getParameter("Stock_quantity");
 		String Status = request.getParameter("Status");
 		String Description = request.getParameter("Description");
-		 	int role = 0;
-		    double price = 0.0;
-		    float size = 0;
-		    int stock_quantity = 0;
-		    int userId = 0;
-		    int product_id = 0;
-		    int productDetail_id=0;
-		    try {
-		        if (Role != null && !Role.isEmpty()) role = Integer.parseInt(Role);
-		        if (Price != null && !Price.isEmpty()) price = Double.parseDouble(Price);
-		        if (Size != null && !Size.isEmpty()) size = Float.parseFloat(Size);
-		        if (Stock_quantity != null && !Stock_quantity.isEmpty()) stock_quantity = Integer.parseInt(Stock_quantity);
-		        if(ProductDetail_id!=null && !ProductDetail_id.isEmpty())productDetail_id=Integer.parseInt(ProductDetail_id);
-		    } catch (NumberFormatException e) {
-		        stock_quantity = 0;
-		    }
-		AdminDao adDao = new AdminDao();
+		int role = 0;
+		double price = 0.0;
+		float size = 0;
+		int stock_quantity = 0;
+		int userId = 0;
+		int product_id = 0;
+		int productDetail_id = 0;
+		try {
+			if (Role != null && !Role.isEmpty())
+				role = Integer.parseInt(Role);
+			if (Price != null && !Price.isEmpty())
+				price = Double.parseDouble(Price);
+			if (Size != null && !Size.isEmpty())
+				size = Float.parseFloat(Size);
+			if (Stock_quantity != null && !Stock_quantity.isEmpty())
+				stock_quantity = Integer.parseInt(Stock_quantity);
+			if (ProductDetail_id != null && !ProductDetail_id.isEmpty())
+				productDetail_id = Integer.parseInt(ProductDetail_id);
+		} catch (NumberFormatException e) {
+			stock_quantity = 0;
+		}
+		//AdminDao adDao = new AdminDao();
 		AdminBo adbo = new AdminBo();
 		// Thêm người dùng admin
 		String action = request.getParameter("action");
@@ -182,7 +199,7 @@ public class AdminController extends HttpServlet {
 						request.getRequestDispatcher("Admin.jsp").forward(request, response);
 						return;
 					} else {
-						int result = adDao.AddUserAdmin(UserName, Password, Name, PhoneNumber, Email, role);
+						int result = adbo.AddUserAdmin(UserName, Password, Name, PhoneNumber, Email, role);
 						if (result > 0) {
 							List<UserBean> Listuser = adbo.getUser1();
 							request.setAttribute("DsUser", Listuser);
@@ -206,33 +223,32 @@ public class AdminController extends HttpServlet {
 			// Chỉnh sửa người dùng
 			try {
 				if (UserId != null && !UserId.trim().isEmpty()) {
-					  userId = Integer.parseInt(UserId);			
-				int resultEditUser = adDao.UpdateUserAdmin(userId, UserName, Password, Name, PhoneNumber, Email, role);
-				if (resultEditUser > 0) {
-					List<UserBean> Listuser = adbo.getUser1();
-					request.setAttribute("DsUser", Listuser);
-					List<ProductDetailBean> listProduct = adbo.getProduct1();
-					request.setAttribute("Dsproduct", listProduct);
-					response.sendRedirect("AdminController?EditUsersuccess=true");
-					return;
-				} else {
-					request.setAttribute("Thong Bao", "Them nguoi dung that bai!");
-					request.getRequestDispatcher("Admin.jsp").forward(request, response);
-					return;
+					userId = Integer.parseInt(UserId);
+					int resultEditUser = adbo.UpdateUserAdmin(userId, UserName, Password, ProductName, PhoneNumber, Email, role);
+					if (resultEditUser > 0) {
+						List<UserBean> Listuser = adbo.getUser1();
+						request.setAttribute("DsUser", Listuser);
+						List<ProductDetailBean> listProduct = adbo.getProduct1();
+						request.setAttribute("Dsproduct", listProduct);
+						response.sendRedirect("AdminController?EditUsersuccess=true");
+						return;
+					} else {
+						request.setAttribute("Thong Bao", "Them nguoi dung that bai!");
+						request.getRequestDispatcher("Admin.jsp").forward(request, response);
+						return;
+					}
 				}
-			}
 			} catch (Exception e) {
 				e.printStackTrace();
 				request.setAttribute("Thong Bao", "Lỗi hệ thống chinh sửa!");
 			}
-
 		} else if (action.equals("addProduct")) {
 			// Thêm sản phẩm Admin
 			try {
 				if (!ProductName.equals("") && !Price.equals("") && !Image.equals("") && !Size.equals("")
 						&& !Brand.equals("") && !Stock_quantity.equals("") && !Status.equals("")
 						&& !Description.equals("")) {
-					int resultProduct = adDao.AddProductAdmin(ProductName, price, Image, size, Brand, stock_quantity,
+					int resultProduct = adbo.AddProductAdmin(ProductName, price, Image, size, Brand, stock_quantity,
 							Status, Description);
 					if (resultProduct > 0) {
 						List<ProductDetailBean> listProduct = adbo.getProduct1();
@@ -244,7 +260,6 @@ public class AdminController extends HttpServlet {
 						request.getRequestDispatcher("Admin.jsp").forward(request, response);
 						return;
 					}
-
 				} else {
 					System.out.println("khong co san pham");
 					request.getRequestDispatcher("Admin.jsp").forward(request, response);
@@ -255,10 +270,10 @@ public class AdminController extends HttpServlet {
 			}
 		} else if (action.equals("EditProduct")) {
 			try {
-				 if (Product_id != null && !Product_id.trim().isEmpty()) {
-					 product_id=  Integer.parseInt(Product_id);
-					int resulteditproduct = adDao.UpdateProductAdmin(product_id, ProductName, price, Image,productDetail_id, size, Brand,
-							stock_quantity, Status, Description);
+				if (Product_id != null && !Product_id.trim().isEmpty()) {
+					product_id = Integer.parseInt(Product_id);
+					int resulteditproduct = adbo.UpdateProductAdmin(product_id, ProductName, price, Image,
+							productDetail_id, size, Brand, stock_quantity, Status, Description);
 					if (resulteditproduct > 0) {
 						List<UserBean> Listuser = adbo.getUser1();
 						request.setAttribute("DsUser", Listuser);
@@ -275,17 +290,17 @@ public class AdminController extends HttpServlet {
 				e.printStackTrace();
 				request.setAttribute("Thong Bao", "Lỗi hệ thống cập nhật san pham!");
 			}
-		}else if(action.equals("DeleteUser")){
+		} else if (action.equals("DeleteUser")) {
 			try {
-				int userid= Integer.parseInt(request.getParameter("id"));
-				int resultUserDelete=adDao.DeleteUserAdmin(userid);
-				if(resultUserDelete>0) {
+				int userid = Integer.parseInt(request.getParameter("id"));
+				int resultUserDelete = adbo.DeleteUserAdmin(userid);
+				if (resultUserDelete > 0) {
 					List<UserBean> Listuser = adbo.getUser1();
 					request.setAttribute("DsUser", Listuser);
 					List<ProductDetailBean> listProduct = adbo.getProduct1();
 					request.setAttribute("Dsproduct", listProduct);
 					response.sendRedirect("AdminController?DeleteUsersuccess=true");
-				}else {
+				} else {
 					request.setAttribute("Thong Bao", "Xóa người dùng thất bại!");
 					request.getRequestDispatcher("Admin.jsp").forward(request, response);
 					return;
@@ -295,39 +310,64 @@ public class AdminController extends HttpServlet {
 				e.printStackTrace();
 				request.setAttribute("Thong Bao", "Lỗi hệ thống xóa người dùng!");
 			}
-		}else if(action.equals("DeleteProduct")) {
-				try {
-					int productDetail_ID=Integer.parseInt(request.getParameter("id"));
-					System.out.println("ID sản phẩm cần xóa: " + request.getParameter("id"));
-					System.out.println("ID cần xóa: " + productDetail_ID);
-					
-					int resultProductDelete=adDao.DeleteProductAdmin(productDetail_ID);
-					if(resultProductDelete>0) {
-						List<UserBean> Listuser = adbo.getUser1();
-						request.setAttribute("DsUser", Listuser);
-						List<ProductDetailBean> listProduct = adbo.getProduct1();
-						request.setAttribute("Dsproduct", listProduct);
-						response.sendRedirect("AdminController?DeleteProductsuccess=true");
-					}else {
-						request.setAttribute("Thong Bao", "Xóa sản phẩm thất bại!");
-						request.getRequestDispatcher("Admin.jsp").forward(request, response);
-						return;
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					request.setAttribute("Thong Bao", "Lỗi hệ thống xóa sản phẩm!");
+		} else if (action.equals("DeleteProduct")) {
+			try {
+				int productDetail_ID = Integer.parseInt(request.getParameter("id"));
+				System.out.println("ID sản phẩm cần xóa: " + request.getParameter("id"));
+				System.out.println("ID cần xóa: " + productDetail_ID);
+
+				int resultProductDelete = adbo.DeleteProductAdmin(productDetail_ID);
+				if (resultProductDelete > 0) {
+					List<UserBean> Listuser = adbo.getUser1();
+					request.setAttribute("DsUser", Listuser);
+					List<ProductDetailBean> listProduct = adbo.getProduct1();
+					request.setAttribute("Dsproduct", listProduct);
+					response.sendRedirect("AdminController?DeleteProductsuccess=true");
+				} else {
+					request.setAttribute("Thong Bao", "Xóa sản phẩm thất bại!");
+					request.getRequestDispatcher("Admin.jsp").forward(request, response);
+					return;
 				}
-		}else {
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				request.setAttribute("Thong Bao", "Lỗi hệ thống xóa sản phẩm!");
+			}
+		} else if (action.equals("EditOrderStatus")) {
+
+			int Order_id = Integer.parseInt(request.getParameter("Order_id"));
+			String status = request.getParameter("Status");
+			try {
+
+				adbo.UpdateOrderAdmin(status, Order_id);
+				List<OrderBean> Order = adbo.getOrderAdmin();
+				request.setAttribute("dsOrder", Order);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			RequestDispatcher rd = request.getRequestDispatcher("Admin.jsp");
+			rd.forward(request, response);
+		} else if (action.equals("ViewOrderDetail")) {
+
+			int Order_id = Integer.parseInt(request.getParameter("Order_id"));
+
+			try {
+				
+				List<OrderDetailBean> orderDetails = adbo.dsproDetail(Order_id);
+				request.setAttribute("orderDetails", orderDetails);
+				request.setAttribute("orderId", Order_id);
+				RequestDispatcher rd = request.getRequestDispatcher("AdminOrderDetail.jsp");
+				rd.forward(request, response);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
 			request.setAttribute("Thong Bao", "Không xác định được hành động!");
 			request.getRequestDispatcher("Admin.jsp").forward(request, response);
 
-			}
-		
-		
-
-
-
+		}
 
 	}
 }

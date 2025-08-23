@@ -48,7 +48,7 @@ body {
 /* Layout */
 .container {
   display: flex;
-    min-height: calc(100vh - 60px); /* thay height -> min-height */
+  min-height: calc(100vh - 60px); /* thay height -> min-height */
 }
 
 /* Sidebar */
@@ -89,6 +89,7 @@ body {
 
 /* Main content */
 .main-content {
+	
     flex-grow: 1;
     padding: 30px;
     background-color: #ecf0f1;
@@ -426,6 +427,104 @@ body {
 
 .popup.error {
     background-color: #dc3545;
+}
+/* ====== QUẢN LÝ ĐƠN HÀNG ====== */
+#order-section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#order-section h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ====== QUẢN LÝ ĐƠN HÀNG ====== */
+#order-section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#order-section h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Bảng đơn hàng */
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.order-table thead {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.order-table th, .order-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+/* Nút hành động 
+.order-table tbody tr:nth-child(even) {
+    background-color: rgb(255, 0, 0);
+}
+*/
+.order-table tbody tr:hover {
+    background-color: rgb(128, 0, 0);
+}
+
+
+.btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Nút cập nhật */
+.btn-save {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #0b7dda;
+}
+
+/* Nút xóa */
+.btn-delete {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #d32f2f;
+}
+
+/* Select trạng thái */
+select[name="Status"] {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 

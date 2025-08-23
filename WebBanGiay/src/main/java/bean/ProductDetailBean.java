@@ -67,15 +67,7 @@ public class ProductDetailBean extends ProductBean {
 		Description = description;
 	}
 
-//	public ProductDetailBean(int product_id, String productName, double price, String image, float size, String brand,
-//			int stock_quantity, String status,String description) {
-//		super(product_id, productName, price, image); 
-//		this.size = size;
-//		this.brand = brand;
-//		this.stock_quantity = stock_quantity;
-//		this.status = status;
-//		this.Description=description;
-//	}
+
 
 	@Override
 	public String toString() {
