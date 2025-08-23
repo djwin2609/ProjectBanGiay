@@ -1,5 +1,6 @@
 package bo;
 
+import java.sql.SQLException;
 import java.util.List;
 import dao.CartDao;
 import bean.CartBean;
@@ -14,7 +15,14 @@ public class CartBo {
     public void addToCart(int userId, int productId, int quantity) throws Exception {
         cartDao.AddtoCart(userId, productId, quantity);
     }
-
+    public void RemoveFromCart(int User_id, int Product_id) throws SQLException {
+    	cartDao.RemoveFromCart(User_id, Product_id);
+    }
+    public double getProductPrice(int productId) throws SQLException {
+    	
+    	return cartDao.getProductPrice(productId);
+    	
+    }
     public double getTotalAmount(List<CartBean> cartList) {
         double total = 0;
         for (CartBean item : cartList) {

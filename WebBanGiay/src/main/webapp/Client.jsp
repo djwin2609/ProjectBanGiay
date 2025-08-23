@@ -134,7 +134,7 @@ body {
 				<li>Đổi Mật Khẩu</li>
 				<li>Cài Đặt Thông Báo</li>
 				<li>Thông Tin Cá Nhân</li>
-				<li>Đơn Mua</li>
+				<li><a href="VerifyOrderController1">Đơn mua</a></li>
 				<li>Kho Voucher</li>
 			</ul>
 		</div>

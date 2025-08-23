@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import bean.OrderBean;
 import bean.ProductDetailBean;
 import bean.UserBean;
 import bo.AdminBo;
@@ -39,6 +40,10 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String MsgLogin=request.getParameter("success");
+		if("true".equals(MsgLogin)) {
+			request.setAttribute("success", "Đăng nhập thành công");
+		}
 		LoginBo LogBo = new LoginBo();
 		AdminBo adbo = new AdminBo();
 		ProductBo proBo = new ProductBo();
@@ -50,30 +55,41 @@ public class LoginController extends HttpServlet {
 		try {
 			List<UserBean>dsUser=adbo.getUser1();
 			List<ProductDetailBean>dsProduct=adbo.getProduct1();
+			List<OrderBean> Order = adbo.getOrderAdmin();
 			if (UserName != null && Password != null && !UserName.trim().equals("") && !Password.trim().equals("")) {
+				boolean found = false;
 				// Duyệt danh sách và kiểm tra
 				for (UserBean ub : LogBo.getLogin()) {
 					if (UserName.equals(ub.getUserName()) && Password.equals(ub.getPassword())) {
+						found = true;
 						HttpSession session = request.getSession();
-						session.setAttribute("Login", true);   // hoặc cứ giữ nguyên nếu bạn dùng để check login
+						session.setAttribute("Login", true);   //dùng để check login
 						session.setAttribute("User", ub);     
-						session.setAttribute("username",ub.getName() );// ✅ Bắt buộc phải có dòng này
-						//session.setAttribute("Login", ub);
+						session.setAttribute("username",ub.getName() );//
+						
 						// Admin=0
 						if (ub.getRole() == 0) {
 							request.setAttribute("DsUser", dsUser);
 							request.setAttribute("Dsproduct", dsProduct);
+							
+							request.setAttribute("dsOrder", Order);
+							request.setAttribute("success", "Đăng nhập thành công");
 							request.getRequestDispatcher("Admin.jsp").forward(request, response);
 						} else {
 							// client=1
 							List<ProductDetailBean> productList = proBo.getPro();
 							request.setAttribute("dssanpham", productList);
+							
+							request.setAttribute("success", "Đăng nhập thành công");
 							request.getRequestDispatcher("HomePage.jsp").forward(request, response);
 						}
 						return;
 					}
 				}
-				request.setAttribute("kt", "dang nhap sai");
+				 if (!found) {
+	                    request.setAttribute("ThongBao", "Sai tài khoản hoặc mật khẩu!");
+	                }
+				//request.setAttribute("kt", "dang nhap sai");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

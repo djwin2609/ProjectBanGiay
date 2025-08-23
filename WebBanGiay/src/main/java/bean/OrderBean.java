@@ -69,8 +69,8 @@ public class OrderBean {
 		PhoneNumber = phoneNumber;
 	}
 	public OrderBean() {
-		super();
-		// TODO Auto-generated constructor stub
+		
+		
 	}
 	public OrderBean(int order_id, int user_id, String name, String phoneNumber, Date orderDate, double totalAmount,
 			String paymentMethod, String shippingAddress, String status) {
@@ -85,6 +85,7 @@ public class OrderBean {
 		ShippingAddress = shippingAddress;
 		Status = status;
 	}
+
 
 	
 	

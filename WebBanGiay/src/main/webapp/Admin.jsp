@@ -2,6 +2,8 @@
 <%@page import="bean.UserBean"%>
 <%@ page import="java.util.*"%>
 <%@page import="bean.ProductDetailBean"%>
+<%@page import="bean.OrderDetailBean"%>
+<%@page import="bean.OrderBean"%>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -12,6 +14,44 @@
 <!-- Font Awesome cho biểu tượng -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>/* modal */
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+	background: #fff;
+	margin: 10% auto;
+	padding: 20px;
+	width: 400px;
+	border-radius: 8px;
+}
+
+.close {
+	float: right;
+	font-size: 22px;
+	cursor: pointer;
+}
+
+.order-table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: auto;
+}
+
+.order-table th, .order-table td {
+	white-space: nowrap;
+}
+</style>
+
 
 <script>
     function showSection(id) {
@@ -23,7 +63,6 @@
     // thêm người dùng
     function toggleAddUserForm() {
         const form = document.getElementById('add-user-form');
-        //form.style.display = form.style.display === 'none' ? 'block' : 'none';
         if(form.style.display=="none"){
         	 form.style.display="block";
         }else{
@@ -43,7 +82,7 @@
     document.getElementById("edit-User_id").value = id;
     document.getElementById("edit-UserName").value = username;
     document.getElementById("edit-Name").value = name;
-    document.getElementById("edit-UserPassword").value = password; // clear mật khẩu
+    document.getElementById("edit-UserPassword").value = password; 
     document.getElementById("edit-PhoneNumber").value = phone;
     document.getElementById("edit-Email").value = email;
 
@@ -55,7 +94,7 @@
    function cancelEditUser() {
 	    document.getElementById("edit-user-form").style.display = "none";
 	}
-//chỉnh sửa sản phẩm
+	//chỉnh sửa sản phẩm
    function toggleEditProductForm(id,productdetail_id ,productName,price,image,size,brand,stock,status,description ) {
 	    const editForm = document.getElementById('edit-product-form');
 	    editForm.style.display = 'block';
@@ -89,12 +128,10 @@
             popup.style.display = "block";
             setTimeout(() => {
                 popup.style.opacity = "0";
-                setTimeout(() => popup.remove(), 500); // remove after fade
+                setTimeout(() => popup.remove(), 500); 
             }, 3000);
         }
     });
-
-
 
 
 </script>
@@ -109,8 +146,9 @@
 		</div>
 		<div class="right">
 			<span class="username">Xin chào, Admin</span> <i
-				class="fas fa-bell icon"></i> <i class="fas fa-cog icon"></i>
-			<a href="LoginController?action=logout" class="logout-btn btn btn-danger">Đăng xuất</a>
+				class="fas fa-bell icon"></i> <i class="fas fa-cog icon"></i> <a
+				href="LoginController?action=logout"
+				class="logout-btn btn btn-danger">Đăng xuất</a>
 		</div>
 	</header>
 	<!-- Phần chính (Sidebar + Nội dung) -->
@@ -123,17 +161,21 @@
 			<button class="sidebar-btn" onclick="showSection('user-section')">
 				<i class="fas fa-user-cog"></i> Quản lý tài khoản
 			</button>
+			<button class="sidebar-btn" onclick="showSection('order-section')">
+				<i class="fas fa-receipt"></i> Quản lý đơn hàng
+			</button>
+
 		</aside>
 		<main class="main-content">
 			<%
 			String userMsg = (String) request.getAttribute("success");
-			    String productMsg = (String) request.getAttribute("productSuccess");
-			    String EditUsersuccessMsg = (String) request.getAttribute("EditUsersuccess");
-			    String EditProductsuccessMsg=(String)request.getAttribute("EditProductsuccess");
-			    String DeleteUsersuccessMsg=(String)request.getAttribute("DeleteUsersuccess");
-			    String DeleteProductsuccessMsg=(String)request.getAttribute("DeleteProductsuccess");
-			    String error = (String) request.getAttribute("Thong Bao");
-				if (userMsg != null) {
+			String productMsg = (String) request.getAttribute("productSuccess");
+			String EditUsersuccessMsg = (String) request.getAttribute("EditUsersuccess");
+			String EditProductsuccessMsg = (String) request.getAttribute("EditProductsuccess");
+			String DeleteUsersuccessMsg = (String) request.getAttribute("DeleteUsersuccess");
+			String DeleteProductsuccessMsg = (String) request.getAttribute("DeleteProductsuccess");
+			String error = (String) request.getAttribute("Thong Bao");
+			if (userMsg != null) {
 			%>
 			<div id="popup-message" class="popup success"><%=userMsg%></div>
 			<%
@@ -158,7 +200,7 @@
 			%>
 			<div id="popup-message" class="popup success"><%=DeleteUsersuccessMsg%></div>
 			<%
-			} else if ( DeleteProductsuccessMsg!=null){
+			} else if (DeleteProductsuccessMsg != null) {
 			%>
 			<div id="popup-message" class="popup success"><%=DeleteProductsuccessMsg%></div>
 			<%
@@ -195,8 +237,8 @@
 							placeholder="Thương hiệu" required> <input type="number"
 							name="Stock_quantity" placeholder="Số lượng" required min="0">
 						<select name="Status" required>
-							<option value="Còn hàng">Còn hàng</option>
-							<option value="Hết hàng">Hết hàng</option>
+							<option value="Available">Còn hàng</option>
+							<option value="Out of stock">Hết hàng</option>
 						</select>
 
 						<textarea name="Description" placeholder="Mô tả chi tiết sản phẩm"
@@ -225,7 +267,7 @@
 							name="Stock" id="edit-Stock" placeholder="Số lượng trong kho"
 							required /> <select name="Status" id="edit-Status" required>
 							<option value="Available">Còn hàng</option>
-							<option value="Hết hàng">Hết hàng</option>
+							<option value="Out of stock">Hết hàng</option>
 						</select>
 						<textarea name="Description" id="edit-Description"
 							placeholder="Mô tả sản phẩm" rows="3"></textarea>
@@ -259,7 +301,6 @@
 							for (ProductDetailBean product : listproduct) {
 						%>
 						<tr>
-
 							<td><%=product.getProductID()%></td>
 							<td><%=product.getProductDetail_id()%></td>
 							<td><%=product.getProductName()%></td>
@@ -288,7 +329,8 @@
 							       '<%=product.getStatus()%>',
 							       '<%=product.getDescription()%>')">
 									<i class="fas fa-edit"></i>
-							</a> <form
+							</a>
+								<form
 									action="AdminController?action=DeleteProduct&id=<%=product.getProductDetail_id()%>"
 									method="post"
 									onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
@@ -357,7 +399,6 @@
 							<option value="0">Admin</option>
 							<option value="1">User</option>
 						</select>
-
 						<button type="submit" class="btn btn-save">Lưu thay đổi</button>
 						<button type="button" class="btn btn-cancel"
 							onclick="cancelEditUser()">Hủy</button>
@@ -425,7 +466,92 @@
 				</table>
 
 			</div>
-			
+
+			<div id="order-section" class="section">
+				<h2>Quản lý đơn hàng</h2>
+
+				<table class="order-table">
+					<thead>
+						<tr>
+							<th>Mã đơn</th>
+							<th>Tên khách hàng</th>
+							<th>Số điện thoại</th>
+							<th>Ngày đặt</th>
+							<th>PT thanh toán</th>
+							<th>ĐC giao hàng</th>
+							<th>Tổng tiền</th>
+							<th>Trạng thái</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%
+						List<OrderBean> orders = (List<OrderBean>) request.getAttribute("dsOrder");
+						if (orders != null && !orders.isEmpty()) {
+							java.text.DecimalFormat formatter = new java.text.DecimalFormat("#,###");
+							for (OrderBean o : orders) {
+						%>
+						<tr>
+							<td><%=o.getOrder_id()%></td>
+							<td><%=o.getName()%></td>
+							<td><%=o.getPhoneNumber()%></td>
+							<td><%=o.getOrderDate()%></td>
+							<td><%=o.getPaymentMethod()%></td>
+							<td><%=o.getShippingAddress()%></td>
+							<td><%=formatter.format(o.getTotalAmount())%> đ</td>
+							<td>
+								<!-- Form sửa trạng thái -->
+								<form action="AdminController" method="post"
+									style="display: inline;">
+
+									<input type="hidden" name="action" value="EditOrderStatus">
+									<input type="hidden" name="Order_id"
+										value="<%=o.getOrder_id()%>"> <select name="Status">
+										<option value="Chờ xác nhận"
+											<%="Chờ xác nhận".equals(o.getStatus()) ? "selected" : ""%>>Chờ xác nhận</option>
+										<option value="Đang giao"
+											<%="Đang giao".equals(o.getStatus()) ? "selected" : ""%>>Đang
+											giao</option>
+										<option value="Hoàn thành"
+											<%="Hoàn thành".equals(o.getStatus()) ? "selected" : ""%>>Hoàn
+											thành</option>
+										<option value="Đã hủy"
+											<%="Đã hủy".equals(o.getStatus()) ? "selected" : ""%>>Đã
+											hủy</option>
+									</select>
+									<button type="submit" class="btn btn-save">Cập nhật</button>
+								</form> <!-- Xóa đơn --> 
+								<!-- Form xem chi tiết -->
+								<form action="AdminController" method="post"
+									style="display: inline;">
+									<input type="hidden" name="action" value="ViewOrderDetail" />
+									<input type="hidden" name="Order_id"value="<%=o.getOrder_id()%>" />
+									<button type="submit" class="btn btn-detail">Xem chi
+										tiết</button>
+								</form>
+								<form action="AdminController?action=DeleteOrder&id=<%=o.getOrder_id()%>"method="post" style="display: inline;"								
+									onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
+									<button type="submit" class="btn btn-delete">
+										<i class="fas fa-trash-alt"></i>
+									</button>
+								</form>
+							</td>
+						</tr>
+
+						<%
+						}
+						} else {
+						%>
+						<tr>
+							<td colspan="9">Không có dữ liệu đơn hàng.</td>
+						</tr>
+						<%
+						}
+						%>
+					</tbody>
+
+				</table>
+			</div>
+
 		</main>
 	</div>
 </body>

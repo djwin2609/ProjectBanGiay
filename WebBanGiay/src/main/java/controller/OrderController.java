@@ -17,9 +17,9 @@ import bean.CartBean;
 import bean.OrderBean;
 import bean.OrderDetailBean;
 import bean.UserBean;
-import dao.CartDao;
-import dao.OrderDao;
-import dao.VerifyOrderDao;
+import bo.CartBo;
+import bo.OrderBo;
+
 
 /**
  * Servlet implementation class OrderController
@@ -43,6 +43,7 @@ public class OrderController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		CartBo cartbo = new CartBo();
 		String successMsg = request.getParameter("success");
 		if ("true".equals(successMsg)) {
 			request.setAttribute("success", "Đặt hàng thành công!");
@@ -57,15 +58,17 @@ public class OrderController extends HttpServlet {
 		UserBean user = (UserBean) session.getAttribute("User");
 		int user_id = user.getUser_id();
 		try {
-			CartDao cartDao = new CartDao();
-			List<CartBean> cart = cartDao.getCartByUserId(user_id);
+
+			List<CartBean> cart = cartbo.getCartByUserId(user_id);
 			request.setAttribute("cart", cart);
-			RequestDispatcher rd = request.getRequestDispatcher("VerifyOrder.jsp");
-			rd.forward(request, response);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.sendRedirect("error.jsp");
 		}
+
+		RequestDispatcher rd = request.getRequestDispatcher("VerifyOrder.jsp");
+		rd.forward(request, response);
 	}
 
 	/**
@@ -90,11 +93,12 @@ public class OrderController extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String address = request.getParameter("address");
 		String payment = request.getParameter("payment");
+		CartBo cartbo = new CartBo();
+		OrderBo ordBo = new OrderBo();
 
 		try {
 
-			CartDao crDao = new CartDao();
-			List<CartBean> cart = crDao.getCartByUserId(userId);
+			List<CartBean> cart = cartbo.getCartByUserId(userId);
 			List<OrderDetailBean> orderDetails = new ArrayList<>();
 			double total = 0;
 			for (CartBean item : cart) {
@@ -106,22 +110,21 @@ public class OrderController extends HttpServlet {
 				od.setPrice(item.getPrice());
 				orderDetails.add(od);
 			}
-			VerifyOrderDao orderDAO = new VerifyOrderDao();
-			boolean success = orderDAO.insertOrder(userId, fullName, phone, new Date(System.currentTimeMillis()), total,
+			boolean success = ordBo.insertOrder(userId, fullName, phone, new Date(System.currentTimeMillis()), total,
 					payment, address, "Chờ xác nhận", orderDetails);
 			if (success) {
-				
+
 				// response.sendRedirect("VerifyOrderController?success=true");
 				OrderBean order = new OrderBean();
-				OrderDao ordDao = new OrderDao();
-				order.setOrder_id(ordDao.getLastOrderId(userId)); // tạo hàm này trong DAO để lấy id vừa insert
+				
+				order.setOrder_id(ordBo.getLastOrderId(userId));
 				order.setName(fullName);
 				order.setPhoneNumber(phone);
 				order.setShippingAddress(address);
 				order.setOrderDate(new Date(System.currentTimeMillis()));
 				order.setStatus("Chờ xác nhận");
 				order.setTotalAmount(total);
-				
+
 				session.setAttribute("Order", order);
 				request.setAttribute("dsOrder", orderDetails);
 

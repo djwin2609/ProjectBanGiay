@@ -1,20 +1,12 @@
-<%@page import="java.util.List"%>
-<%@page import="java.util.ArrayList"%>
-<%@ page import="java.util.*"%>
-<%@page import="bean.ProductDetailBean"%>
-<%@page import="bean.UserBean"%>
-<%@ page isErrorPage="true"%>
-<%@ page errorPage=""%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="java.util.*, bean.ProductDetailBean, bean.UserBean"%>
+
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>HomePage</title>
-
-<link rel="stylesheet"
-	href="https://fontawesome.com/icons/truck?f=classic&s=solid">
+<title>SearchResult</title>
 <style>
 body {
 	margin: 0;
@@ -137,7 +129,6 @@ body {
 	max-width: 1200px; /* tùy ý - giúp không quá to trên màn hình lớn */
 	height: 500px;
 	margin: 30px auto 0 auto; /* 👈 Thêm margin-top 30px */
-	margin: 0 auto;
 	position: relative;
 	overflow: hidden;
 	border-radius: 20px;
@@ -162,8 +153,8 @@ body {
 }
 
 @
-keyframes fadeEffect {
-	from {opacity: 0.4;
+keyframes fadeEffect {from { opacity:0.4;
+	
 }
 
 to {
@@ -171,11 +162,29 @@ to {
 }
 }
 </style>
+<script>
+window.onload = function() {
+    let slideIndex = 0;
+    function showSlides() {
+        const slides = document.getElementsByClassName("slide");
+        if (slides.length === 0) return; // không có slide thì thoát
 
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) {
+            slideIndex = 1;
+        }
+        slides[slideIndex - 1].style.display = "block";
+        setTimeout(showSlides, 3000);
+    }
+    showSlides();
+}
+</script>
 </head>
 <body>
 	<jsp:include page="Header.jsp"></jsp:include>
-
 	<%
 	UserBean user = (UserBean) session.getAttribute("User");
 	if (session != null && session.getAttribute("User") != null) {
@@ -223,7 +232,7 @@ to {
 		</div>
 	</div>
 
-	<!-- Product list -->
+	<h2>Kết quả tìm kiếm</h2>
 
 	<div class="product-list">
 		<%
@@ -263,23 +272,6 @@ to {
 		}
 		%>
 	</div>
-
 	<jsp:include page="Footer.jsp"></jsp:include>
 </body>
-<script>
-	let slideIndex = 0;
-	showSlides();
-	function showSlides() {
-		const slides = document.getElementsByClassName("slide");
-		for (let i = 0; i < slides.length; i++) {
-			slides[i].style.display = "none";
-		}
-		slideIndex++;
-		if (slideIndex > slides.length) {
-			slideIndex = 1
-		}
-		slides[slideIndex - 1].style.display = "block";
-		setTimeout(showSlides, 3000); // Chuyển slide mỗi 3 giây
-	}
-</script>
 </html>

@@ -14,4 +14,9 @@ public class ProductBo {
 		ds=proDao.GetProduct();
 		return ds;
 	}
+	List<ProductDetailBean> searchproduct=new ArrayList<>();
+	public List<ProductDetailBean>search(String keyword) throws SQLException{
+		searchproduct=proDao.SearchProducts(keyword);
+		return searchproduct;
+	}
 }
