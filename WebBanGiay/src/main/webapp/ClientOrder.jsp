@@ -85,6 +85,20 @@ h2 {
 .btn-detail:hover {
 	background-color: #1f6391;
 }
+
+.btn-cancel {
+	background-color: #e74c3c;
+	color: white;
+	padding: 6px 12px;
+	border: none;
+	border-radius: 4px;
+	text-decoration: none;
+	margin-left: 5px;
+}
+
+.btn-cancel:hover {
+	background-color: #c0392b;
+}
 </style>
 </head>
 <body>
@@ -133,6 +147,21 @@ h2 {
 						<button type="submit" class="btn btn-detail">Xem chi tiết</button>
 					</form>
 				</td>
+				<td>
+					<!-- Nút hủy đơn hàng --> 
+					<%
+ 					if (o.getStatus().equals("Chờ xác nhận")) {
+				 	%>
+					<form action="OrderController" method="post"
+						style="display: inline;"
+						onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+						<input type="hidden" name="action" value="CancelOrder" /> <input
+							type="hidden" name="Order_id" value="<%=o.getOrder_id()%>" />
+						<button type="submit" class="btn btn-cancel">Hủy đơn</button>
+					</form> <%
+ }
+ %>
+				</td>
 			</tr>
 			<%
 			}
@@ -144,6 +173,7 @@ h2 {
 			<%
 			}
 			%>
+
 
 
 		</table>

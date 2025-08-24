@@ -61,57 +61,7 @@ public class AdminDao {
 		}
 		return ds;
 	}
-//	public List<OrderDetailBean> getOrder1() throws SQLException {
-//	    List<OrderDetailBean> ds = new ArrayList<>();
-//	    KetNoiCSDL kn = new KetNoiCSDL();
-//	    kn.connectcsdl();
-//	    Connection conn = kn.cn;
-//
-//	    String sql = """
-//	        SELECT 
-//	            ord.Order_id,
-//	            ord.User_id,
-//	            ord.Name,
-//	            ord.PhoneNumber,
-//	            ord.OrderDate,
-//	            ord.totalAmount,
-//	            ord.paymentMethod,
-//	            ord.shippingAddress,	            
-//	            ord.status,
-//	            ordetail.OrderDetail_id,
-//	            ordetail.Product_id,
-//	            ordetail.ProductName,
-//	            ordetail.Quantity,
-//	            ordetail.Price
-//	        FROM [Order] ord
-//	        JOIN OrderDetail  ordetail ON ord.Order_id = ordetail.Order_id
-//	        
-//	    """;
-//
-//	    try (PreparedStatement cmd = conn.prepareStatement(sql);
-//	         ResultSet rs = cmd.executeQuery()) {
-//
-//	        while (rs.next()) {
-//	        
-//	            ds.add(new OrderDetailBean(
-//	                rs.getInt("Order_id"),
-//	                rs.getInt("User_id"),
-//	                rs.getString("Name"),
-//	                rs.getString("PhoneNumber"),
-//	                rs.getDate("OrderDate"),
-//	                rs.getDouble("totalAmount"),
-//	                rs.getString("paymentMethod"),
-//	                rs.getString("shippingAddress"),	               
-//	                rs.getString("status"),
-//	                rs.getInt("OrderDetail_id"),	               
-//	                rs.getInt("Product_id"),
-//	                rs.getString("ProductName"),
-//	                rs.getInt("Quantity"),
-//	                rs.getDouble("Price")));
-//	        }
-//	    }
-//	    return ds;
-//	}
+
 	public List<OrderDetailBean> getOrderDetails(int orderId) throws SQLException {
 		List<OrderDetailBean> list = new ArrayList<>();
 		KetNoiCSDL kn = new KetNoiCSDL();
