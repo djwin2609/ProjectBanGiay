@@ -69,8 +69,6 @@ public class AdminController extends HttpServlet {
 			request.setAttribute("DeleteProductsuccess", "Xóa sản phẩm thành công");
 		}
 		AdminBo adbo = new AdminBo();
-		
-
 		try {
 			for (ProductDetailBean pd : adbo.getProduct1()) {
 				System.out.println("ID: " + pd.getProductID());

@@ -40,5 +40,9 @@ public class OrderBo {
 	        throws SQLException {
 		return ordDao.insertOrder(userId, name, phone, orderDate, totalAmount, paymentMethod, shippingAddress, status, orderDetails);
 	}
+	//cap nhat don hang
+	public int UpdateOrder(String status, int orderId) throws SQLException {
+		return ordDao.UpdateOrder(status, orderId);
+	}
 	
 }

@@ -20,7 +20,7 @@ import bo.OrderBo;
 /**
  * Servlet implementation class VerifyOrderController
  */
-@WebServlet("/VerifyOrderController1")
+@WebServlet("/ViewOrderController1")
 public class ViewOrderController1 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -39,10 +39,7 @@ public class ViewOrderController1 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		String successMsg = request.getParameter("success");
-//		if ("true".equals(successMsg)) {
-//			request.setAttribute("success", "Đặt hàng thành công!");
-//		}	
+
 		HttpSession session = request.getSession(false); // false để không tạo session mới nếu chưa có
 
 		// Kiểm tra người dùng đã đăng nhập chưa

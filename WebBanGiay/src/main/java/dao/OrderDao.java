@@ -13,67 +13,68 @@ import bean.OrderDetailBean;
 
 public class OrderDao {
 	public boolean insertOrder(int userId, String name, String phone, Date orderDate, double totalAmount,
-	        String paymentMethod, String shippingAddress, String status, List<OrderDetailBean> orderDetails)
-	        throws SQLException {
+			String paymentMethod, String shippingAddress, String status, List<OrderDetailBean> orderDetails)
+			throws SQLException {
 
-	    KetNoiCSDL kn = new KetNoiCSDL();
-	    kn.connectcsdl();
-	    Connection conn = kn.cn;
+		KetNoiCSDL kn = new KetNoiCSDL();
+		kn.connectcsdl();
+		Connection conn = kn.cn;
 
-	    try {
-	        conn.setAutoCommit(false);
+		try {
+			conn.setAutoCommit(false);
 
-	        // 1. Thêm đơn hàng vào bảng Order
-	        String sqlOrder = "INSERT INTO [Order] (User_id,Name,PhoneNumber, OrderDate, totalAmount, paymentMethod, shippingAddress, status) VALUES (?, ?, ?, ?, ?, ?,?,?)";
-	        PreparedStatement psOrder = conn.prepareStatement(sqlOrder, PreparedStatement.RETURN_GENERATED_KEYS);
-	        psOrder.setInt(1, userId);
-	        psOrder.setString(2, name);
-	        psOrder.setString(3,phone);
-	        psOrder.setDate(4, orderDate);
-	        psOrder.setDouble(5, totalAmount);
-	        psOrder.setString(6, paymentMethod);
-	        psOrder.setString(7, shippingAddress);
-	        psOrder.setString(8, status);
+			// 1. Thêm đơn hàng vào bảng Order
+			String sqlOrder = "INSERT INTO [Order] (User_id,Name,PhoneNumber, OrderDate, totalAmount, paymentMethod, shippingAddress, status) VALUES (?, ?, ?, ?, ?, ?,?,?)";
+			PreparedStatement psOrder = conn.prepareStatement(sqlOrder, PreparedStatement.RETURN_GENERATED_KEYS);
+			psOrder.setInt(1, userId);
+			psOrder.setString(2, name);
+			psOrder.setString(3, phone);
+			psOrder.setDate(4, orderDate);
+			psOrder.setDouble(5, totalAmount);
+			psOrder.setString(6, paymentMethod);
+			psOrder.setString(7, shippingAddress);
+			psOrder.setString(8, status);
 
-	        int affectedRows = psOrder.executeUpdate();
-	        if (affectedRows == 0) {
-	            conn.rollback();
-	            return false;
-	        }
+			int affectedRows = psOrder.executeUpdate();
+			if (affectedRows == 0) {
+				conn.rollback();
+				return false;
+			}
 
-	        // 2. Lấy Order_id vừa tạo
-	        int orderId = 0;
-	        ResultSet rs = psOrder.getGeneratedKeys();
-	        if (rs.next()) {
-	            orderId = rs.getInt(1);
-	        }
-	        rs.close();
-	        psOrder.close();
+			// 2. Lấy Order_id vừa tạo
+			int orderId = 0;
+			ResultSet rs = psOrder.getGeneratedKeys();
+			if (rs.next()) {
+				orderId = rs.getInt(1);
+			}
+			rs.close();
+			psOrder.close();
 
-	        // 3. Thêm các sản phẩm vào OrderDetail
-	        String sqlDetail = "INSERT INTO OrderDetail (Order_id, Product_id,ProductName, Quantity,Price) VALUES (?, ?, ?,?,?)";
-	        PreparedStatement psDetail = conn.prepareStatement(sqlDetail);
-	        for (OrderDetailBean od : orderDetails) {
-	            psDetail.setInt(1, orderId);
-	            psDetail.setInt(2, od.getProduct_id());
-	            psDetail.setString(3, od.getProductName());
-	            psDetail.setInt(4, od.getQuantity());
-	            psDetail.setDouble(5, od.getPrice());
-	            psDetail.addBatch();
-	        }
-	        psDetail.executeBatch();
-	        psDetail.close();
+			// 3. Thêm các sản phẩm vào OrderDetail
+			String sqlDetail = "INSERT INTO OrderDetail (Order_id, Product_id,ProductName, Quantity,Price) VALUES (?, ?, ?,?,?)";
+			PreparedStatement psDetail = conn.prepareStatement(sqlDetail);
+			for (OrderDetailBean od : orderDetails) {
+				psDetail.setInt(1, orderId);
+				psDetail.setInt(2, od.getProduct_id());
+				psDetail.setString(3, od.getProductName());
+				psDetail.setInt(4, od.getQuantity());
+				psDetail.setDouble(5, od.getPrice());
+				psDetail.addBatch();
+			}
+			psDetail.executeBatch();
+			psDetail.close();
 
-	        conn.commit();
-	        conn.close();
-	        return true;
+			conn.commit();
+			conn.close();
+			return true;
 
-	    } catch (Exception e) {
-	        conn.rollback();
-	        e.printStackTrace();
-	        return false;
-	    }
+		} catch (Exception e) {
+			conn.rollback();
+			e.printStackTrace();
+			return false;
+		}
 	}
+
 	public List<OrderDetailBean> getOrder(int Order_id, int User_id) throws SQLException {
 		List<OrderDetailBean> orderdetails = new ArrayList<>();
 		KetNoiCSDL kn = new KetNoiCSDL();
@@ -132,6 +133,7 @@ public class OrderDao {
 		conn.close();
 		return orderId;
 	}
+
 	public List<OrderBean> getOrderByUserID(int User_id) throws SQLException {
 		List<OrderBean> ds = new ArrayList<>();
 		KetNoiCSDL kn = new KetNoiCSDL();
@@ -164,12 +166,13 @@ public class OrderDao {
 			String paymentMethod = rs.getString("paymentMethod");
 			String shippingAddress = rs.getString("shippingAddress");
 			String status = rs.getString("status");
-		
-			ds.add(new OrderBean(order_id, User_id, Name, Phone, orderDate, totalAmount, paymentMethod,
-					shippingAddress, status));
+
+			ds.add(new OrderBean(order_id, User_id, Name, Phone, orderDate, totalAmount, paymentMethod, shippingAddress,
+					status));
 		}
 		return ds;
 	}
+
 	public List<OrderDetailBean> getOrderdetail(int orderId) throws SQLException {
 		List<OrderDetailBean> list = new ArrayList<>();
 		KetNoiCSDL kn = new KetNoiCSDL();
@@ -196,11 +199,11 @@ public class OrderDao {
 
 				""";
 		PreparedStatement ps = conn.prepareStatement(sql);
-		 ps.setInt(1, orderId); 
+		ps.setInt(1, orderId);
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			int order_id = rs.getInt("Order_id");
-			int User_id=rs.getInt("User_id");
+			int User_id = rs.getInt("User_id");
 			String Name = rs.getString("Name");
 			String Phone = rs.getString("PhoneNumber");
 			Date orderDate = rs.getDate("OrderDate");
@@ -218,6 +221,24 @@ public class OrderDao {
 					shippingAddress, status, orderdetail_id, product_id, ProductName, quantity, Price));
 		}
 		return list;
+	}
+
+	public int UpdateOrder(String status, int orderId) throws SQLException {
+	    KetNoiCSDL kn = new KetNoiCSDL();
+	    kn.connectcsdl();
+	    Connection conn = kn.cn;
+
+	    String sqlOrder = "UPDATE [Order] SET status=? WHERE Order_id=?";
+	    try (PreparedStatement stmt = conn.prepareStatement(sqlOrder)) {
+	        stmt.setString(1, status);
+	        stmt.setInt(2, orderId);
+
+	        return stmt.executeUpdate();
+	    } finally {
+	        if (conn != null) {
+	            conn.close();
+	        }
+	    }
 	}
 
 }

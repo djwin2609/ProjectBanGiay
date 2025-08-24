@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import bean.OrderDetailBean;
 import bean.UserBean;
 import bo.CartBo;
 import bo.OrderBo;
-
 
 /**
  * Servlet implementation class OrderController
@@ -116,7 +116,7 @@ public class OrderController extends HttpServlet {
 
 				// response.sendRedirect("VerifyOrderController?success=true");
 				OrderBean order = new OrderBean();
-				
+
 				order.setOrder_id(ordBo.getLastOrderId(userId));
 				order.setName(fullName);
 				order.setPhoneNumber(phone);
@@ -136,6 +136,24 @@ public class OrderController extends HttpServlet {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+
+		String action = request.getParameter("action");
+		
+
+		if ("CancelOrder".equals(action)) {
+			try {
+				int Order_id = Integer.parseInt(request.getParameter("Order_id"));
+				int result = ordBo.UpdateOrder("Đã hủy", Order_id);
+				if (result > 0) {
+					List<OrderBean> Order = ordBo.getOrder1(userId);
+					request.setAttribute("dsOrderclient", Order);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 	}
 
