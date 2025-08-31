@@ -528,12 +528,6 @@
 									<button type="submit" class="btn btn-detail">Xem chi
 										tiết</button>
 								</form>
-								<form action="AdminController?action=DeleteOrder&id=<%=o.getOrder_id()%>"method="post" style="display: inline;"								
-									onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
-									<button type="submit" class="btn btn-delete">
-										<i class="fas fa-trash-alt"></i>
-									</button>
-								</form>
 							</td>
 						</tr>
 

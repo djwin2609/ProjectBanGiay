@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+
 
 import bean.OrderDetailBean;
 import bean.ProductDetailBean;
@@ -40,10 +40,7 @@ public class ProductController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession(false);
-		if (session != null && session.getAttribute("User") != null) {
-			// session.invalidate();
-		}
+	
 		ProductBo proBo = new ProductBo();
 		
 		try {
@@ -95,9 +92,10 @@ public class ProductController extends HttpServlet {
 			throws ServletException, IOException {
 		String action = request.getParameter("action");
 		if (action.equals("ViewOrderDetail")) {
-			int Order_id = Integer.parseInt(request.getParameter("Order_id"));
+			
 			try {
 				OrderBo ordBo=new OrderBo();
+				int Order_id = Integer.parseInt(request.getParameter("Order_id"));
 				List<OrderDetailBean> orderDetails = ordBo.getOrderĐetails(Order_id);
 				request.setAttribute("orderDetails", orderDetails);
 				request.setAttribute("orderId", Order_id);

@@ -200,7 +200,6 @@
 			<li><a
 				href="${pageContext.request.contextPath}/ProductController?Brand=Puma">Puma</a></li>
 		</ul>
-
 		<form class="search" action="SearchController" method="get">
 			<input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..."
 				required>

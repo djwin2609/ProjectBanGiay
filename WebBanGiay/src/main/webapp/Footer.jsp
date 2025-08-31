@@ -62,7 +62,7 @@
  <footer class="site-footer">
   <div class="footer-container">
     <div class="footer-section">
-      <img src="img/myshoes_logo.png" alt="Myshoes Logo" class="footer-logo">
+      <a href="ProductController" class="logo">MyShoes</a>
       <p>Myshoes.vn được định hướng trở thành hệ thống thương mại điện tử bán giày chính hãng hàng đầu Việt Nam.</p>
       <p><strong>Showroom:</strong> Phương Ngạn, Ái Tử, Quảng Trị</p>
       <p><strong>Hotline:</strong> 0349996408</p>
