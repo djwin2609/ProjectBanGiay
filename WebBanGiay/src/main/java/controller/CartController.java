@@ -35,6 +35,7 @@ public class CartController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
 		RequestDispatcher rd = request.getRequestDispatcher("Cart.jsp");
 		rd.forward(request, response);
 	}
@@ -54,7 +55,7 @@ public class CartController extends HttpServlet {
 
 				// Kiểm tra người dùng đã đăng nhập chưa
 				if (session == null || session.getAttribute("User") == null) {
-					response.sendRedirect("Login.jsp"); // hoặc trang báo lỗi
+					response.sendRedirect("Login.jsp"); 
 					return;
 				}
 				UserBean user = (UserBean) session.getAttribute("User");
@@ -70,8 +71,8 @@ public class CartController extends HttpServlet {
 				System.out.println("Quantity: " + quantity);
 
 				cartBo.addToCart(user_id, Product_id, quantity);
-				// Sau khi thêm xong, có thể chuyển về trang giỏ hàng
-				response.sendRedirect("Cart.jsp"); // hoặc bất kỳ trang nào bạn muốn
+				
+				response.sendRedirect("ClientPagesController");
 
 			} catch (Exception e) {
 				e.printStackTrace();

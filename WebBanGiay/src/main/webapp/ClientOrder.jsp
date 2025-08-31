@@ -112,7 +112,7 @@ h2 {
 					<th>Tên khách hàng</th>
 					<th>Số điện thoại</th>
 					<th>Ngày đặt</th>
-					<th>Phương thức thanh toán</th>
+					<th>PT thanh toán</th>
 					<th>Địa chỉ giao hàng</th>
 					<th>Tổng tiền</th>
 					<th>Trạng thái</th>

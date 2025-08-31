@@ -120,7 +120,7 @@ public class AdminDao {
 		kn.connectcsdl();
 		Connection conn = kn.cn;
 		String sqlClient = "INSERT INTO [User] (UserName,Password,Name,PhoneNumber,Email,Role) VALUES (?,?,?,?,?,?)";
-		PreparedStatement cmdClient = kn.cn.prepareStatement(sqlClient);
+		PreparedStatement cmdClient = conn.prepareStatement(sqlClient);
 		cmdClient.setString(1, UserName);
 		cmdClient.setString(2, Password);
 		cmdClient.setString(3, Name);
@@ -145,10 +145,8 @@ public class AdminDao {
 	    KetNoiCSDL kn = new KetNoiCSDL();
 	    kn.connectcsdl();
 	    Connection conn = kn.cn;
-
 	    int result = 0;
 	    int productId = 0;
-
 	    try {
 	        // 1. Kiểm tra sản phẩm đã tồn tại chưa
 	        String checkProductSQL = "SELECT Product_id FROM Product WHERE ProductName = ? AND Price = ? AND Image = ?";
